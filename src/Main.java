@@ -1,10 +1,11 @@
 public class Main {
     public static void main(String[] args) {
         ParametersParser parser = new ParametersParser(args);
-        if(parser.isInteger()) {
+        if(parser.getDataType().equals("Integer")) {
             IntegerSorter sorter = new IntegerSorter(parser);
             sorter.start();
-        }else{
+        }
+        if(parser.getDataType().equals("String")){
             StringSorter sorter = new StringSorter(parser);
             sorter.start();
         }

@@ -1,5 +1,5 @@
 public class ParametersParser {
-    private boolean isInteger = true;
+    private String dataType = "Integer";
     private int fileStart =0;
     private boolean isReverse = false;
 
@@ -17,10 +17,10 @@ public class ParametersParser {
     public void parseParam(String[] input){
         while (true){
             switch (input[fileStart]){
-                case "-s"-> isInteger=false;
+                case "-s"-> dataType = "String";
                 case "-d"-> isReverse=true;
                 case "-a"-> isReverse=false;
-                case "-i"-> isInteger=true;
+                case "-i"-> dataType = "Integer";
                 default-> {
                     getParams(input);
                     return;
@@ -39,8 +39,8 @@ public class ParametersParser {
         }
     }
 
-    public boolean isInteger() {
-        return isInteger;
+    public String getDataType() {
+        return dataType;
     }
 
     public boolean isReverse() {
