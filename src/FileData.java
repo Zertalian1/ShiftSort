@@ -3,6 +3,7 @@ public class FileData<T extends Comparable<T>> implements Comparable<FileData<T>
     private T data;
     private T prevData;
     private long offset;
+
     public FileData(String  name){
         fileName = name;
     }
@@ -11,35 +12,36 @@ public class FileData<T extends Comparable<T>> implements Comparable<FileData<T>
         return data.compareTo(input.getData());
     }
 
-    /**
-     * сравнивает старое значение data с новым
-     * меньше 0, если новое меньше старого
-     * больше 0, если новое больше старого
-     * 0, иначе
-     * @param parser
-     * @return
-     */
-    public int compareData(ParametersParser parser){
+    public int compareData(){
+        if(prevData == null)
+            return 0;
         return data.compareTo(prevData);
-    }
+    }   // добавить зависимость от parser
+
     public String getFileName() {
         return fileName;
     }
+
     public void setData(T data) {
         this.data = data;
     }
-    public void setPrevData(T prevData) {
-        this.prevData = prevData;
-    }
-    public T getPrevData() {
-        return prevData;
-    }
+
     public void addOffset(long of){
         offset+=of;
     }
+
     public T getData() {
         return data;
     }
+
+    public void setPrevData(T prevData) {
+        this.prevData = prevData;
+    }
+
+    public T getPrevData() {
+        return prevData;
+    }
+
     public long getOffset() {
         return offset;
     }

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public interface Sorter <T extends Comparable<T>>{
-    boolean readElement(FileData<T> data);
+    void readElement(FileData<T> data) throws ReadElementException;
     void start();
 
     default void sort(List<FileData<T>> streams, ParametersParser parser) throws IOException {

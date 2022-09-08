@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;;
+import java.util.ArrayList;
 import java.util.List;
 
 public class IntegerSorter implements Sorter<Integer>{
@@ -9,26 +9,24 @@ public class IntegerSorter implements Sorter<Integer>{
         this.parser=parser;
     }
     @Override
-    public boolean readElement(FileData<Integer> data) {
+    public void readElement(FileData<Integer> data) throws ReadElementException {
         try {
             String temp = readValue(data);
             if(temp == null){
-                System.out.println("file " + data.getFileName() + " is ended");
-                return true;
+                throw new ReadElementException("file " + data.getFileName() + " is ended");
             }else{
                 data.setData(Integer.valueOf(temp));
             }
         } catch (IOException e) {
-            System.err.println("Read data ERROR");
-            return true;
+            throw new ReadElementException("Read data ERROR");
         } catch (IncorrectDataException e) {
-            System.err.println(e.getMassage());
-            return true;
+            throw new ReadElementException(e.getMassage());
         } catch (NumberFormatException e){
-            System.out.println("incorrect data format in "+ data.getFileName());
-            return true;
+            throw new ReadElementException("incorrect data format in "+ data.getFileName());
         }
-        return false;
+        if((parser.isReverse() && data.compareData()>0) || (!parser.isReverse() && data.compareData()<0)){
+            throw  new ReadElementException("The sorting order in the file is broken");
+        }
     }
 
     @Override
@@ -36,15 +34,21 @@ public class IntegerSorter implements Sorter<Integer>{
         List<FileData<Integer>> streams = new ArrayList<>();
         for (String inputFile : parser.getInputFilesNames()) {
             FileData<Integer> data = new FileData<>(inputFile);
-            if(!readElement(data)) {
+            try {
+                readElement(data);
                 streams.add(data);
+            } catch (ReadElementException e) {
+                System.out.println(e.getMassage());
             }
         }
         try (BufferedWriter out = new BufferedWriter(new FileWriter(parser.getOutputFileName()))){
             while (streams.size()>0) {
                 sort(streams, parser);
                 out.write(streams.get(0).getData() + "\n");
-                if(readElement(streams.get(0))){
+                try {
+                    readElement(streams.get(0));
+                } catch (ReadElementException e) {
+                    System.out.println(e.getMassage());
                     streams.remove(0);
                 }
              }
